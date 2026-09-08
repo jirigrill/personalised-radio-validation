@@ -85,23 +85,29 @@ So add these questions to the session, ahead of the original four:
 Also carry in: **Deezer is blocked** on non-commercial ToS, not its SDK (04b); and **Tuned Global is
 technology-only and cannot license music** (04b, correcting the earlier scout pass).
 
-**Tidal is BLOCKED, and 07's hopeful reading of it is withdrawn** (04). `AssetPresentation.FULL`
-exists in the SDK, but third parties get **30-second previews only** in practice, and Guidelines v3.0
-§III bars the mechanic in terms even wider than Spotify's: it prohibits functionality that "segues,
-overlaps, mixes or re-mixes any TIDAL content … **or combines any TIDAL content with any other audio
-content (including without limitation other TIDAL content)**". That parenthetical removes the fallback
-of a music-only, same-service variant — the prohibition is on the *mechanic*, not the scope. Tidal
-also has **zero podcasts** (discontinued Jul 2024), so an external source is forced, which trips the
-integration clause: a closed loop. And it is commercially marginal — last verifiable subscriber figure
-is 2.1M (2020); Block has written off ~89% of its investment.
+**The sweep is complete, and the pattern is the finding.** All five music platforms examined are
+**BLOCKED**, each by a *different* clause drafted by a *different* legal team:
 
-**The pattern across all four platforms is now the finding.** Every platform resolved so far is
-blocked by contract rather than by capability, and the same two formulas — *"metadata and cover art
-only"* caching, and a bar on integrating with "another service" — appear **independently drafted** in
-Spotify's and Tidal's terms. That is evidence of a **standard label-licensing requirement**, not one
-platform's idiosyncrasy. The implication for this session: **there is probably no permissive
-platform-native route to find**, and the conversation should move to the licensed-catalogue,
-local-library, and spoken-audio-first variants rather than hunting for a friendlier platform.
+| Platform | Deciding reason |
+|---|---|
+| **Spotify** | Policy III.7 bars segue/mix/overlap (even hard cuts, even Spotify-into-Spotify); IV.2 bars monetising a Streaming SDA; quota caps at 5 users pre-launch; Compliance Tips names "DJ/Mixes" as a disallowed use case |
+| **Apple Music** | DPLA §3.3.6(D) — content cannot be synchronized with any other content, **and** no legal revenue model (ASRG 4.10 / 4.5.2(i)) |
+| **YouTube Music** | III.I.1 (no substitute/mimic of YouTube UX) + III.I.9 (no background players) + listening history API removed |
+| **Tidal** | Guidelines v3.0 §III bars the mechanic including Tidal-into-Tidal; 30-second previews only; zero podcasts |
+| **Deezer** | ToS §IV "NON-COMMERCIAL USE" — private/family scope only |
+
+Two formulas — *"metadata and cover art only"* caching, and the bar on integrating with "another
+service" — appear **independently drafted** in both Spotify's and Tidal's terms. Read that as a
+**standard label-licensing requirement, not one platform's idiosyncrasy**. The implication: **there is
+no friendlier platform to find, and this session should not spend time looking for one.** Question 3
+below is effectively answered — no platform-native route survives, whatever the addressable audience.
+
+Note also that **Spotify has no podcast play-position history** (`recently-played` "currently doesn't
+support podcast episodes") and that Recommendations, Audio Features and Related Artists are **gone for
+apps registered after 27 Nov 2024**. Combined with **no Apple API exposing podcast data at all**, the
+inputs the concept's programmer needs are missing on the two largest platforms **independently of the
+legal position**. Any variant needs RSS/OPML import and its own taste model — worth deciding here,
+since it applies to the local-library and licensed-catalogue variants too.
 
 **Apple is BLOCKED on contract despite winning on code** (02). Both of 07's Apple findings were
 corrected by the deeper pass: MusicKit has **no podcast type anywhere** (confirmed), and the

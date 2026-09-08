@@ -264,6 +264,48 @@ Each ticket must state explicitly which of its findings were carried over and wh
   **Transferable lesson**: the fastest killer was **background playback**, not audio separation —
   cheap to check first on any future platform, and the developer's commuting case cannot survive
   without it.
+- [01 — Spotify](issues/01-spotify-feasibility.md) — **BLOCKED, not partial. The Spotify variant dies
+  four independent times.** (1) **The mechanic is prohibited**: Policy **III.7** — "Do not permit any
+  device or system to segue, mix, re-mix, or overlap any Spotify Content with any other audio content
+  (including other Spotify Content)". *Segue* is the **first verb**, so even a **hard cut** is barred,
+  and the parenthesis kills the "only sequence Spotify tracks" retreat. The carried-over III.5 turns
+  out to be the **weakest** of three applicable clauses, not the strongest. (2) **The business model is
+  prohibited**: Policy **IV.2** bans all monetisation of Streaming SDAs, and the ToS define Streaming
+  to include "using the Spotify Platform to control a background Spotify application", and a Streaming
+  SDA as such "regardless of whether it also provides additional functionality" — **both escape hatches
+  pre-closed**. This alone kills the $1–3k MRR bar. (3) **Access caps at 5 users**: extended quota mode
+  is organizations-only since 15 May 2025 and requires "at least 250k MAUs" on an already-launched
+  service — **circular for a cold start**. (4) **Offline fails architecturally**: no download/prefetch
+  API in any third-party SDK, so podcast audio caches freely while music **silently dies in a tunnel** —
+  the worst possible failure mode in the developer's own commute. **The decisive new find, independently
+  verified by the orchestrator at <https://developer.spotify.com/compliance-tips>**: Spotify's own
+  Compliance Tips page lists **"DJ/Mixes"** among six **"Disallowed Use Cases"** — "Using Spotify's
+  catalog to segue, mix, re-mix, or overlap any Spotify Content with any other audio content" — and its
+  disallowed-monetisation example, **"Charging users $5/month for a home automation app that includes
+  the ability to trigger music with the press of a button"**, is **structurally identical to this app's
+  pricing plan**. The developer would not be arguing an ambiguity; they would be arguing against
+  Spotify's own published example of the forbidden thing. **No carve-out exists**: III.1 and III.11
+  carry explicit "written approval" escape hatches; III.4, III.5 and III.7 carry **none** — a drafting
+  asymmetry that looks deliberate. **Upgraded to VERIFIED**: the agent cloned the iOS SDK and grepped
+  its public headers for `volume|pcm|sampleBuffer|AVAudio|duck` — **zero matches**; `getCrossfadeState:`
+  exists but is read-only with no setter. Prior work's INFERRED "no PCM surface" is now
+  header-verified. **Two corrections to prior work**: the Web Playback SDK *does* claim iOS/mobile
+  Safari support and *does* expose `setVolume` (WKWebView undocumented and untested); and
+  resume-at-position genuinely works (`seekToPosition:`, `playbackPosition`, `position_ms`) — a sharper
+  affirmative than prior work gave, which does not help, because doing it as a *programmed sequence* is
+  exactly III.7. **Two probable blockers flagged as lawyer questions rather than asserted**: III.13
+  bars "building profiles of users", which arguably describes the personalisation engine itself; and
+  III.14's "otherwise ingest Spotify Content into a machine learning or AI model" reads onto
+  inference-time prompting, hitting the AI-DJ feature. **Product holes independent of the legal ones,
+  carry to every remaining ticket**: `recently-played` "currently doesn't support podcast episodes", so
+  **podcast play-position history — the key input for interleaving — is unavailable**; and
+  Recommendations, Audio Features, Audio Analysis and Related Artists are **gone for any app registered
+  after 27 Nov 2024**, removing the signal a music programmer needs. **Honest gaps**: web search errored
+  on every attempt, so **zero secondary enforcement evidence** — no named app suspensions under
+  III.5/III.7; the "prohibited in practice" claim rests instead on a primary-source fact, that extended
+  quota mode requires Spotify's review team to "test out your app" for policy compliance, so the **gate
+  precedes any enforcement question**. Spotify also publishes no numeric rate limits in either mode,
+  making capacity planning impossible from docs.
 
 ## Not yet specified
 
