@@ -388,3 +388,172 @@ that is not evidence of retention.** The reusable lesson is the zero-decision, p
 configure-once shape — which is **exactly SUB/WAVE's no-skip thesis, arrived at independently**, and
 exactly this concept's shape. Three independent teams converging on "remove the daily decision" is
 the most encouraging signal in this ticket. It is a signal about *product form*, not about demand.
+
+---
+
+## 5. Differentiator audit
+
+Same discipline as the prior project, which found **1 of 9 structurally safe**. Definitions:
+**already occupied** = a living product ships it; **one API call away** = any competent developer
+could add it in days, so it cannot hold a moat; **structurally safe** = defensible because a
+competitor either legally cannot, commercially will not, or structurally does not want to copy it.
+
+| # | Candidate differentiator | Verdict | Reasoning |
+|---|---|---|---|
+| 1 | **AI-generated DJ intros between songs** | **Already occupied** | Spotify AI DJ (n/a, Premium, incumbent). Plus AITUNE, musen, doremiradio, SUB/WAVE, Mureka, and ~16 GitHub projects. Twelve-plus implementations in 2026 alone. And **no user asked for it** — three Spotify ideas request the ability to *disable* it |
+| 2 | **Continuous stream, no queue to build** | **Already occupied** | SUB/WAVE (*"One stream. No skip."*), InstaPodz Daily Show, every FM tuner, Deezer Flow, Pandora. Also what broadcast radio has done for a century |
+| 3 | **Reads your listening history / liked songs** | **One API call away** | It *is* an API call — MusicKit `recentlyPlayed` / library reads. AITUNE shipped exactly this with 2 ratings. Spotify's own AI DJ is built on it by definition |
+| 4 | **Personalised news segments** | **One API call away** | Open RSS + TTS. SUB/WAVE ships it as a pluggable "skill" with an editable brief; ~10 GitHub projects do it; InstaPodz/Noa/Curia are entire products around it |
+| 5 | **Mood/context awareness (time of day, weather, location)** | **One API call away** | AITUNE already ships time-of-day + weather + location. SUB/WAVE ships weather and time checks |
+| 6 | **CarPlay / Android Auto commute focus** | **Already occupied — and constrained** | SUB/WAVE ships CarPlay. **Scout FM shipped CarPlay in 2020 and Apple bought it and switched it off.** Worse: CarPlay reportedly *forbids* custom radio-style UI (SECONDARY, needs verification). The headline use case is the surface with the least design freedom |
+| 7 | **Interleaving the user's *own followed podcast episodes* with their *own liked music*** | **Structurally safe — but for a bad reason** | **The only unoccupied item.** Nobody living ships it. But it is unoccupied because it is **structurally blocked, not overlooked**: it requires simultaneous rights to programme licensed catalogue music *and* control third-party podcast playback in one stream. Spotify's Developer Policy bars integration "with streams or content from another service" (flagged in map.md as the highest-priority thing to verify — and this ticket's evidence says that clause is precisely the wall). The one product that ever promised it, AudioOne, is a dead domain. Auddia's audited filings say its freedom to operate rests on the personal-use time-shifting exemption. **A moat you cannot legally cross is not a moat you can occupy** |
+| 8 | **Intelligent "suitable moment" pause-and-resume of an episode** | **Structurally safe (technically), commercially inert** | This is the genuinely hard, genuinely uncopied piece — a transcript/segmentation problem. **Auddia built exactly this capability** (detecting boundaries between commercials, songs and DJ talk), shipped it, and earned **$0 of consumer revenue across two full fiscal years.** Defensible and unwanted is worse than undefended and wanted |
+| 9 | **Zero-decision / press-play, configure once** | **Already occupied — by three parties who converged on it** | SUB/WAVE's no-skip thesis, InstaPodz's post-pivot Daily Show, and FM radio. InstaPodz's founder identified it as *the* lesson. Correct instinct, not a differentiator |
+| 10 | **Uses the music you already pay for (no second subscription)** | **One API call away** | AITUNE ships it today on Apple Music ("100% Apple Music", "fully licensed"), as does WAIV per the wider sweep. Free tier, n = 2 |
+| 11 | **Self-hosted / own-library variant (privacy, no licensing)** | **Already occupied, comprehensively** | This is SUB/WAVE's entire territory: 1,307 stars, MIT, free, shipping daily, 1,716 commits in four months. Competing here means competing with free against a faster shipper |
+| 12 | **Developer is in the target segment (commuter)** | **Not a differentiator** | A genuine advantage for taste and speed, and a sample of one. The prior project's standing preferences say so explicitly. SUB/WAVE's author is equally in his segment and has 4 ratings |
+
+**Score: 12 candidates, 0 unambiguously safe.**
+
+Two items (7 and 8) are structurally uncopied, and **both are uncopied for reasons that also stop
+this concept**: #7 is a licensing wall, and #8 is a capability a public company built, shipped, and
+monetised at $0. That is a worse result than the prior project's 1-of-9, because the prior project's
+one safe differentiator was at least *reachable*.
+
+**The honest summary of the audit:** everything reachable is occupied or trivially copyable, and the
+only thing unoccupied is unoccupied because it is blocked.
+
+---
+
+## SATURATION VERDICT
+
+> ### **(b) Empty because everyone who tried failed — with a strong secondary reading of (c) already solved by an adequate free substitute.**
+>
+> It is emphatically **not (a).** Do not build on the premise that nobody thought of this.
+
+### Why (b), specifically
+
+The concept has been attempted repeatedly and independently for twelve years. The three closest
+analogues are all dead:
+
+- **Scout FM** — "radio-like stations for podcasts", curated from listening history, with CarPlay.
+  Bought by Apple in 2020 and **switched off on all platforms**. HN noticed with **1 upvote**.
+- **Swell** — personalised talk radio. Bought by Apple in 2014 for **$30M** and discontinued.
+- **AudioOne** — the only product ever found that explicitly promised *news + podcasts + music* in
+  one personal stream. **Domain is NXDOMAIN.** Its Show HN got 59 points and then it died quietly.
+
+Alongside them: Otto Radio, Rivet, 60dB, Spotify Stations, Curio, Huxe, Radiant, WFH.FM, Moodagent,
+Entale. And **Auddia** — a Nasdaq-listed company that solved the hardest technical sub-problem
+(audio-boundary detection), spent $7.7M in a single year, booked **$0 consumer revenue across two
+fiscal years**, accumulated **687 App Store ratings**, and in 2026 **abandoned direct-to-consumer
+entirely** while merging into its own CEO's unrelated holding company.
+
+Meanwhile the void itself is real and confirmed: **not one living product programmes licensed music
+interleaved with the user's own podcast episodes.** Every living AI-DJ product has no podcasts. Every
+living AI-talk product has no music. The join is empty. But it is empty **because it is a licensing
+problem wearing a product-problem costume** — the surviving products all route around it by dropping
+an ingredient (generate the music: Mureka; use your own library: SUB/WAVE; drop the music: InstaPodz;
+drop the podcasts: AITUNE).
+
+### Why (c) is the strong secondary reading
+
+The job — *fill my commute with music and talk without touching the phone* — is **adequately solved
+today, for free**, three ways: FM/DAB radio, SiriusXM (n = 3,075,988), and a playlist plus a podcast
+app (Spotify n = 41,965,524). The only thing missing is personalisation, and the competitive evidence
+says users are not asking to trade for it:
+
+- **Nobody in the 294-comment HN thread on Spotify's AI DJ asked for podcasts mixed with music.** The
+  requests ran the other way.
+- On Spotify's own ideas board, **separating** podcasts from music scores **500 / 463 / 443 votes**;
+  **interleaving** them scores **12 and 10**.
+- **Three separate Spotify ideas request the ability to turn AI DJ features off.** No user anywhere
+  asked for AI DJ intros.
+- The highest-engagement audio-in-car community post found in this entire research (**174 upvotes,
+  151 comments**) is for a **free tuner over existing streams** — not for programmed personalisation.
+
+### What would change this verdict
+
+Only one thing: **evidence of demand at volume that the graveyard's occupants failed to find rather
+than failed to serve.** Nothing in this ticket supplies it. The largest genuinely-relevant indie has
+**156 ratings**; the largest AI-DJ-over-your-own-music app has **2**; the best-funded attempt bought
+**687 ratings with $907k of marketing in six months** and quit. Against a **$1k/mo MRR floor**, this
+ticket supplies no competitor whose position suggests that floor is reachable — and it supplies one
+audited filing suggesting it is not.
+
+### The one genuinely useful positive
+
+Three independent teams — SUB/WAVE, InstaPodz (post-pivot), and this concept — converged on the same
+product shape: **zero decision, press play, configure once, no skip.** That convergence is real and
+it validates the *form*. It says nothing about whether anyone will pay for it. Note that both of the
+others give it away free.
+
+---
+
+## Method, coverage, and explicit gaps
+
+**Tools:** iTunes Search & Lookup API (primary, worked reliably), HN Algolia API (primary, worked),
+GitHub REST/search API (primary, worked), SEC EDGAR full-text search and filings (primary, worked —
+the single richest source in this ticket), direct DNS/HTTP probes, Wayback CDX. Two parallel research
+agents covered the graveyard and the Reddit/Product Hunt demand sweep.
+
+**Tooling failures that limit this ticket — stated plainly:**
+
+- **`WebSearch` was broken for the entire session** (HTTP 400 on every call). All general web search
+  had to be routed through WebFetch against Bing/DuckDuckGo, which was **CAPTCHA-walled or returned
+  irrelevant results almost every time**. Several Tier-2 and graveyard rows are consequently
+  UNVERIFIED that should have been checkable in one query.
+- **Apple's customer-review RSS returned empty feeds for every app queried.** No user review text was
+  obtained for any app. Every "what users praise / complain about / ask for" claim is
+  **NO EVIDENCE FOUND**, including for SUB/WAVE. This is the largest gap in the ticket.
+- **Reddit's JSON API and old.reddit were blocked** from this environment (SSL failure, then HTML
+  interstitial). All Reddit figures in this document come from a **redlib mirror** via a subagent and
+  were **not cross-checked against reddit.com**. Treat scores as indicative.
+- **Product Hunt and Indie Hackers** were inaccessible (`site:` unusable, search gated). **No MRR
+  figure for any competitor was obtained anywhere.**
+- **Spotify's support and community sites** returned 404s or 403s for every URL tried; several
+  Spotify-feature questions are therefore unresolved.
+
+**Specific unresolved items — do not cite these as settled:**
+
+1. **Spotify "Music + Talk" status.** NO EVIDENCE FOUND either way. Do not assert it is dead.
+2. **Spotify "Your Daily Drive"** — both known playlist IDs 404 as of 2026-09-08, but **no shutdown
+   announcement exists.** Describe as unreachable and unpromoted, not as killed.
+3. **Pandora Stories** is **alive** as Curated Programs (Feb 2026). Whether present-day Curated
+   Programs still permits *full-length* music between voice segments was not verified — worth one
+   check, since Pandora is the last major platform doing this at all.
+4. **Otto Radio's funding and cause of death.** Cause is inferred; funding is not public. Radio World
+   issued a correction on this. **Any specific dollar figure is fabricated.**
+5. **iHeartRadio AI DJ, Deezer Flow, Amazon Music AI, YouTube Music Ask Music** — all official pages
+   404'd. UNVERIFIED. These matter for ticket 07, not this one.
+6. **SUB/WAVE Hosted pricing** — one secondary reading suggested "£5/month"; the project site carries
+   no pricing and the docs domain does not resolve. NO EVIDENCE FOUND.
+7. **CarPlay's prohibition on custom radio-style UI** — SECONDARY, single Reddit comment, 3 upvotes.
+   **Verify against Apple's CarPlay App Programming Guide before costing the commute use case.** If
+   true it is a second independent blocker on the concept's headline scenario.
+8. **Curio and Recast** could not be confirmed to exist as audio apps under those names. Do not cite.
+9. **"Spotify Your Daily Podcast"** does not exist under that name. Do not cite.
+
+**Highest-value follow-up if these gaps need closing:** route the blocked lookups through
+`curl "https://r.jina.ai/<URL>"`, which defeats the 403s on Nieman Lab, Medium, PRNewswire and
+radioink.com, and provides a working general web search via
+`r.jina.ai/https://duckduckgo.com/html/?q=<QUERY>` while `WebSearch` remains broken.
+
+---
+
+## Feeds into
+
+- **Ticket 09 (demand & WTP)** — the interleaving asymmetry (separate: 500/463/443 votes;
+  interleave: 12/10) and the absence of any request for AI DJ intros are demand evidence that
+  surfaced here and belong there.
+- **Tickets 01–05 (platform feasibility)** — Auddia's audited risk factors name the
+  **personal-use time-shifting exemption** as the legal basis for real-time radio manipulation. That
+  is prior art for the licensing question, from a primary source.
+- **Ticket 10 (AI DJ intros)** — candidate differentiator #1 is occupied twelve times over and
+  actively unwanted by users. Treat the intros as table stakes at best, a liability at worst.
+- **Ticket 11/12 (unit economics, MRR arithmetic)** — Auddia's $907k marketing spend → 687 ratings →
+  $0 consumer revenue is an independent corroboration of the prior project's paid-acquisition
+  arithmetic. Marvis Pro ($9.99, n = 1,270) is the realistic ceiling comparable for a paid iOS
+  power-listener client.
+- **Ticket 13 (surviving variant)** — the local-library variant is **the most thoroughly occupied
+  square on the board** (SUB/WAVE: free, MIT, 1,307 stars, shipping daily). The platform-native
+  variant is shippable (AITUNE proves it) and has no demonstrated demand. Neither is open ground.

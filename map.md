@@ -106,6 +106,35 @@ Each ticket must state explicitly which of its findings were carried over and wh
   third-party full-track playback path found. **Unoccupied: one and a half of five steps**; only step
   3 has a real claim, and it is vacant because Spotify vacated it. Caveat: `WebSearch` failed all
   session, so findings are strong on clauses and weak on press/sentiment.
+- [08 — Indie competitive landscape](issues/08-indie-competitive-landscape.md) — **Saturation
+  verdict: (b) empty because everyone who tried failed**, with a strong secondary reading of
+  **(c) already solved by an adequate free substitute**. Emphatically not (a). The concept *is*
+  genuinely unoccupied — no living product interleaves licensed music with the user's own podcast
+  episodes; every living AI-DJ app mixes *synthesised* talk with music, every living AI-talk app has
+  no music. **The join is a licensing problem wearing a product-problem costume.** But it is a
+  graveyard, not virgin ground: **Scout FM** ("radio-like stations for podcasts" from listening
+  history, with CarPlay) was bought by Apple in 2020 and switched off — HN noticed with **1 upvote**;
+  **Swell** (personalised talk radio) was bought by Apple in 2014 after $30M and discontinued;
+  **AudioOne**, the only product ever found promising news+podcasts+music in one stream (Show HN, 59
+  pts), is now **NXDOMAIN**. **The decisive find is an SEC filing, not an indie app** (VERIFIED,
+  sec.gov CIK 0001554818, 10-K filed 2026-03-06; company and filing date independently confirmed by
+  the orchestrator): **Auddia Inc. (NASDAQ: AUUD)** built *faidr*, which **solved the hardest
+  sub-problem this concept needs** — real-time detection of boundaries between commercials, songs and
+  DJ talk. Results: **revenue $0 in FY2024 and FY2025**; $7,584 in H1 2026 (B2B, not consumers); net
+  loss **$7.69M** in FY2025; **687 App Store ratings after $907k of marketing in six months**; going
+  concern into Q2 2027; and in 2026 it **abandoned direct-to-consumer entirely** while merging into
+  its own CEO's unrelated holding company. Two things no indie datapoint could establish: consumer
+  demand is absent **at any spend level a solo developer can reach**, and the legal theory is named
+  and fragile — Auddia's audited risk factors rest its freedom to operate on the **"personal use
+  exemption" for time-shifting**. Hand that to 01–05 as prior art. **Differentiator audit: 12
+  candidates, 0 unambiguously safe** (worse than the prior project's 1-of-9); the two
+  structurally-uncopied items are uncopied for reasons that *also stop this concept* — the
+  interleaving itself is legally blocked, and suitable-moment pausing is what Auddia built and
+  monetised at $0. **Volume across the living field is negligible**: SUB/WAVE (closest competitor,
+  free/MIT, 1,307 GitHub stars, shipping daily) has **4 iOS ratings**; AITUNE 2; musen 0;
+  doremiradio 0; largest relevant indie InstaPodz 156. Caveats: `WebSearch` broken all session, and
+  Apple's review RSS returned empty for every app — **no user review text was obtained anywhere**,
+  the largest gap.
 
 ## Not yet specified
 
