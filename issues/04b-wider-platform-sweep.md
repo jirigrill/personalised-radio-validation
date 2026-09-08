@@ -1,7 +1,7 @@
 # 04b — The wider platform sweep: Deezer, self-hosted, and the licensed-catalogue route
 
 Type: research
-Status: open
+Status: resolved
 Blocked by: —
 
 ## Question
@@ -108,3 +108,99 @@ A verdict table covering every candidate examined, matching tickets 01–04's fo
 statement of **which non-platform music routes are live**, what each costs, and — the decisive
 question for ticket 05 — whether any of them lets the app play **music the user already knows and
 likes**, or whether every legal route means unfamiliar music.
+
+## Answer
+
+Full findings: [`docs/research/04b-wider-platform-sweep.md`](../docs/research/04b-wider-platform-sweep.md)
+
+### Headline verdict
+
+**The blocker is not price. It is that the AI DJ announcing tracks in advance is legally incompatible
+with every affordable route to familiar music.**
+
+17 U.S.C. §114(d)(2)(C)(ii) (VERIFIED) forbids a statutorily-licensed webcaster from publishing "an
+advance program schedule or prior announcement" of the titles or featured artists of specific upcoming
+recordings. That is concept step 5. It is a flat prohibition with no de minimis exception, and it binds
+**every** statutory-licence route — including Feed.fm Radio and any 7digital build, not just direct
+licensing. The parallel clause on the vendor side is Feed.fm T&C §5.6/§5.5(a), which **bars insertion
+into or alteration of the stream** — the same outcome by a different mechanism.
+
+**One genuine piece of good news, which corrects this ticket's own framing:** personalisation is *not*
+interactive by definition. *Arista Records v. Launch Media* (2d Cir. 2009) held LAUNCHcast's
+personalised radio non-interactive on a **control vs. influence** distinction (SECONDARY — the opinion
+text itself was unretrievable). Pandora operates this way today. However, INFERRED at medium-high
+confidence: a station built from *the user's own liked songs* is a materially harder case than
+LAUNCHcast on the "program specially created for the recipient" prong, because LAUNCHcast survived
+precisely by *not* being a your-library player. **Lawyer required.**
+
+### Live non-platform music routes, and what each costs
+
+| Route | Status | Cost (verified figures only) |
+|---|---|---|
+| **User's own library** — Subsonic/OpenSubsonic, Jellyfin, iOS local files | **Live, legal, free** | **$0** licensing |
+| **Feed.fm / Adaptr** | **Live but two blockers** | Enterprise: **NO EVIDENCE FOUND** (structure verified: setup fee + nonrefundable quarterly fees). Adaptr 2021 archived tiers $99/$999/$2,399 — SECONDARY and stale |
+| **Direct US statutory licence** | Live, but loss-making | **$1,000/yr per channel** (37 CFR §380.10) + **$350/yr** BMI lowest tier. **$0.0032/performance** is the real cost — ≈**$17,500/yr at 1,000 subscribers**. ASCAP/SESAC/GMR: NO EVIDENCE FOUND |
+| **ListenBrainz** (taste data only, no audio) | **Live, cleanly priced** | **$100/month** (MetaBrainz Bronze) |
+| **Mubert** | Dead | $99/$249/$999/mo published — but caps at ~16 daily-hour listeners |
+| **Tuned Global** | Dead — **cannot license you music** | n/a |
+| **7digital / MassiveMusic** | Dead at this budget | "You will be responsible for paying all royalties" |
+| **Deezer** | Dead — ToS §IV "NON-COMMERCIAL USE" | n/a |
+| **Last.fm** | Dead — commercial use needs a negotiated agreement | NO EVIDENCE FOUND |
+
+### The decisive question for ticket 05
+
+**Does any legal route play music the user already knows and likes? Yes — three do. None is
+simultaneously familiar, affordable, and compatible with the AI DJ.**
+
+1. **The user's own library — the only route that is legal, free AND familiar.** It is their music by
+   definition. Jellyfin's `PlayCount`/`IsFavorite`/`LastPlayedDate` (VERIFIED in source) is the richest
+   taste signal found anywhere in this sweep, with an official actively-maintained Swift SDK. It is also
+   the only route where crossfade and TTS interleaving work natively, **and the only route where the AI
+   DJ can announce freely** — private performance sits outside §114 entirely, so step 5 survives fully
+   intact. **It fails on addressable market, not on law or engineering.** The entire incumbent iOS field
+   (play:Sub, SubStreamer, Amperfy, Finamp, iSub) sits at **82–425 App Store ratings each**; $1k MRR
+   needs ~400–500 concurrent subscribers from a cold start, against free and mature competitors, in a
+   population unwilling to pay for software. **Cannot plausibly reach $1–3k MRR.**
+2. **Feed.fm / Adaptr — the only route worth an enquiry.** Genuine rights provider (not just tech),
+   major-label and chart catalogue, full indemnification, live self-serve signup at Adaptr, iOS SDK
+   v5.8.0 shipped 2026-06-02. Blocked pending two answers: the §5.6 insertion ban, and price.
+3. **Direct statutory licensing (US only)** — full repertoire, affordable minimum, but structurally
+   loss-making per-performance, incompatible complement limits for artist-concentrated libraries, and
+   **the AI DJ reduced to back-announcing only** ("that was…", or "some Fleetwood Mac at some point
+   today" — both expressly permitted).
+
+**The strategic choice this research forces:** advance track announcement and licensed familiar music
+are mutually exclusive at this budget. Either drop advance announcement (retreat to DMCA-compliant
+radio, still gated by per-performance economics), or drop the music layer for a spoken-audio product
+where announcement is legal and cheap — third-party podcasts via open RSS, news audio, and TTS are all
+tractable at $1–3k, and **announcing podcast episodes in advance is perfectly legal**, since the
+pre-announcement bar is a sound-recording rule. **Do not budget for "find a cheaper music API."**
+
+### Follow-on TASK tickets required
+
+1. **Enquiry email to Feed.fm** — minimum annual commitment, and whether TTS DJ announcements and
+   third-party podcast interleaving are permitted notwithstanding T&C §5.6/§5.5(a). This is the single
+   highest-value unknown remaining.
+2. **Enquiry to Adaptr** (app.adaptr.com registration is live) — current pricing, and whether a
+   personalised consumer radio app satisfies Exhibit B eligibility.
+3. **Legal review**, if either route survives: whether a liked-songs pool clears §114(j)(7) after
+   *Launch Media*; how SoundExchange counts channels for per-user personalised streams (the
+   highest-leverage unknown in the cost model); and podcast/TTS insertion rights.
+
+### Hypothesis verification
+
+(a) Tuned Global is technology-only, not a rights provider — **CONFIRMED**; the scout's table is
+corrected. (b) Feed.fm SDKs actively maintained and the only vendor bundling rights + SDK +
+major-label catalogue + indemnification — **CONFIRMED, both limbs**. (c) 7digital makes you the
+licensee/royalty payer, and DMCA constraints bar pre-announcing tracks — **CONFIRMED, both limbs**, and
+the second limb generalises to every statutory route. (d) Royalty-free/CC licences cover masters only,
+leaving PRO liability — **PARTIAL, overstated**: CC 4.0 expressly includes "public performance" in
+"Share" and covers the composition where the licensor controls it; the real risk is *authority*
+(PRO-affiliated writers, unclear splits), not scope. (e) Mubert's binding API terms are unpublished and
+contradict its public personal-use-only language — **CONFIRMED**.
+
+**Method limitation:** WebSearch was unavailable for the entire session (HTTP 400 on every call).
+Findings rest on direct primary-source fetches, Wayback CDX, GitHub/Docker Hub/iTunes APIs, and direct
+inspection of the local iOS 27.0 SDK headers. "NO EVIDENCE FOUND" means *not found in this session*.
+Not legal advice.
+

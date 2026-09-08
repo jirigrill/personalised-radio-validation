@@ -316,4 +316,443 @@ direct licensing.
 **But this route is moot for this product anyway:** you cannot build a user's-liked-songs radio from a
 royalty-free or CC catalogue. The user's songs are not in it.
 
+---
+
+## Section 3 — Deezer
+
+**BLOCKED, and not for the reason the scout expected.** The SDK question turns out to be secondary:
+the developer terms forbid commercial use outright.
+
+### 3.1 The deciding clause
+
+**VERIFIED** (developers.deezer.com/termsofuse) — **Section IV is titled "NON-COMMERCIAL USE"**:
+
+> "The Developer agrees that the use of the Services is strictly limited for a non-commercial purpose
+> and in a non-commercial environment. It means that the Developer shall not perceive, receive,
+> generate, benefit or create directly or indirectly, any moneys, incomes, revenues, data or any other
+> consideration in connection with the use of neither the Services themselves, nor any and all Content
+> accessed through the Services."
+
+And, in the same section:
+
+> "The use of the Content is limited to a strictly private use within a family scope."
+
+Section I confines the grant to "personal web pages, blog… and personal applications". **A
+subscription-priced consumer app is excluded on every count** — it is commercial, it is not private,
+and it is not within a family scope. There is no self-serve commercial tier: any commercial use needs
+a partner agreement, i.e. enterprise sales, which the map puts out of scope.
+
+Also **VERIFIED**, same page, Section IV: full-length playback requires a **Premium+** account, and
+content is "otherwise accessible only up to 30 seconds".
+
+### 3.2 The 30-second question, resolved
+
+**VERIFIED** (developers.deezer.com/guidelines, "Content access rules" table): the REST **API** returns
+a 30-second extract for *every* user level including Premium. Full-track playback is available only via
+**Plugins** (web) and the **native SDKs**, and only for Premium users. The guidelines footnote is
+explicit: "*Full data access, but no audio streaming available except 30s extracts."
+
+Direct probe confirms this — `curl https://api.deezer.com/track/3135556` returns a `preview` field
+holding a signed 30s MP3 URL, and no full-length stream field. **Full-track playback does exist beyond
+30s extracts, but only through the SDK/plugin path, never the REST API.**
+
+### 3.3 Two further blocking clauses, VERIFIED
+
+- **Caching:** "Local Storage/Offline Storage of audio data is **strictly forbidden**." This kills the
+  commuting/offline case exactly as Spotify's ToS IV.3.b did.
+- **Streaming URL privacy:** "Except for 30s. extracts mp3s, full-length tracks URLs must never be
+  accessible to the end-user from your application" — you are responsible for preventing it. That
+  forbids handing the audio to your own mixing pipeline in any form the user could reach.
+- **Mandatory feature set:** the guidelines require any "full Deezer-enabled application" to implement
+  My Music, My Playlists, My Albums, Mixes and Search — a UI mandate, not a radio product.
+
+**No clause was found specifically addressing mixing Deezer content with third-party audio
+(NO EVIDENCE FOUND)** — but this is moot given Section IV.
+
+### 3.4 SDK status — effectively abandoned
+
+**VERIFIED** via the GitHub API on org `deezer`: the only SDK sample repos are `iOS-sdk-samples`
+(last pushed **2019-05-20**, 7 stars) and `android-sample` (**2019-07-04**, 42 stars);
+`javascript-samples` last pushed 2021-11-14. No SDK binary is distributed via GitHub — the Android
+README instructs you to "download the latest version of Deezer SDK for Android and copy the aar",
+i.e. manual download from a docs page.
+
+**The doc pages are login-walled**: developers.deezer.com/sdk/ios, /sdk/android and /sdk/javascript all
+return HTTP 200 but render only "You have to login to accept the terms and conditions of the simple
+API." So the version and release date of the current SDK are **NO EVIDENCE FOUND**.
+
+**The developer docs are stale. VERIFIED:** a 2024 web.archive.org snapshot of
+developers.deezer.com/guidelines is byte-for-byte equivalent in substance to the live page today. No
+formal deprecation notice was found (**NO EVIDENCE FOUND** — WebSearch was unavailable and DuckDuckGo
+served CAPTCHAs), so the scout's deprecation rumour is **neither confirmed nor refuted on the
+documentation record**. **INFERRED (high confidence): the platform is unmaintained** — 2019-era
+samples, no public SDK artifacts, login-walled docs, unchanged guidelines. Whether or not it is
+formally deprecated, it is not a platform to build a business on.
+
+**INFERRED:** the scout's "`/user/me/history` returns 200" was misleading. It does return HTTP 200,
+but the body is `{"error":{"type":"OAuthException","message":"An active access token must be used…"}}`
+— Deezer returns 200 with an error envelope. That is not evidence the endpoint is usable.
+
+### 3.5 Audience and podcasts
+
+**Deezer's own investor site (deezer-investors.com) — VERIFIED:** **9.1m total subscribers** as of
+31 Dec 2025, **€534m** IFRS revenue for FY2025, ~530 staff. Self-described as "#2 independent music
+platform globally" on MIDiA data, with conglomerate-owned services excluded. Named partnerships:
+Orange, TIM Brazil, RTL, Sonos. (Wikipedia's infobox is badly out of date — €451m/2022 and a 2012
+subscriber figure — so use the IR site.)
+
+9.1m subscribers is roughly an order of magnitude below Spotify. **INFERRED:** heavy France/partner-telco
+concentration, given the Orange and TIM Brazil relationships and Deezer's French origin — precise
+geographic split **NO EVIDENCE FOUND**.
+
+**Podcasts: a podcast API exists but is thin.** `GET /podcast/1` returns a show with a `fans` count,
+and `/chart/0/podcasts` returns 200 — but the show probed returned `"available": false`, and
+`/episode/{id}` returned `{"error":{"type":"DataException","message":"no data"}}`. **No user-followed-podcasts
+endpoint was found: NO EVIDENCE FOUND.**
+
+---
+
+## Section 4 — Self-hosted and local library
+
+**Technically the cleanest route in the whole sweep. It fails on market size, not on law or APIs.**
+
+### 4.1 OpenSubsonic — confirmed, and better than the scout reported
+
+**VERIFIED** (opensubsonic.netlify.app/docs):
+- **`stream`** endpoint (since 1.0.0) streams a given media file; params `id`, `maxBitRate`, `format`
+  (`raw` skips transcoding from 1.9.0), `timeOffset`, `size`, `converted`. Returns binary audio.
+- The **`Child`** response object carries **`playCount`** (long), **`starred`** (ISO 8601),
+  **`userRating`** (int 1–5) — all legacy Subsonic fields — plus **`played`** (ISO 8601) and **`bpm`**
+  as OpenSubsonic additions. `bpm` is a genuine bonus for a radio-programming product.
+- Also present: `getStarred` / `getStarred2`, `getRandomSongs`, `getTopSongs` (OpenSubsonic addition),
+  `scrobble`, `setRating`, `star`/`unstar`, `getPlayQueue`/`savePlayQueue`, `getNowPlaying`,
+  `getBookmarks`, `hls`.
+- **Important design note, VERIFIED:** servers "must not count access to this endpoint as a play and
+  increase playcount" — clients must call `scrobble` explicitly. So play-count fidelity is the
+  client's responsibility, and other clients' scrobbles are what populate the taste signal.
+- Auth: legacy query-param username/password (`u=`/`p=`), with token/salt and an **API Key
+  Authentication** extension plus a `tokenInfo` endpoint available.
+- **Capability detection is standardised:** a server supporting an added field "must return it with an
+  empty / default value when not present", so a client can detect support cleanly.
+
+**One-client-reaches-many is TRUE but not uniform — the scout slightly overstated it.**
+- **Funkwhale: PARTIAL. VERIFIED** (docs.funkwhale.audio/user/subsonic/): "Funkwhale supports a subset
+  of the Subsonic API", and "Pod admins can choose to disable access to the Subsonic API." So coverage
+  is partial and can be switched off server-side.
+- **Jellyfin: NOT native. VERIFIED by absence** — Subsonic compatibility exists only via third-party
+  bridges (e.g. `andrewrabert/jellysub`, 61 stars, last pushed **2022**, i.e. unmaintained). **Jellyfin
+  should be integrated via its own API, not via Subsonic.**
+- Navidrome, Gonic, Airsonic(-advanced), Ampache: Subsonic-compatible as reported.
+
+### 4.2 Jellyfin — confirmed, with a genuinely good iOS story
+
+**VERIFIED from source** (`MediaBrowser.Model/Dto/UserItemDataDto.cs` on jellyfin/jellyfin master):
+`PlayCount` (int), `IsFavorite` (bool), `LastPlayedDate` (DateTime?), `Played` (bool),
+`PlaybackPositionTicks` (long), `PlayedPercentage`, `Rating` (double?), `Likes` (bool?). This is the
+richest taste signal of any source in the entire sweep — richer than most commercial APIs.
+
+**VERIFIED** via the GitHub API on org `jellyfin`: **`jellyfin-sdk-swift` is official and actively
+maintained** (pushed 2026-09-08), alongside `jellyfin-sdk-kotlin`, `-csharp`, `-typescript` and the
+`Swiftfin` iOS/tvOS client (pushed 2026-09-06). Jellyfin core has 56,657 stars. **This corrects a
+common assumption: there is a first-party Swift SDK, not merely Swiftfin's internal client.**
+
+### 4.3 Licensing of the user's own files
+
+**INFERRED (high confidence, but a lawyer should confirm before shipping).** In the self-hosted model
+the developer hosts nothing: the user's server streams the user's own files to the user's own client.
+That is a **private, not public, performance** — no §106(4) public-performance right is implicated and
+no licence is needed. The *Cablevision* line of authority (Cartoon Network v. CSC Holdings) supports
+one-copy-per-user private transmission; *Aereo* and *MP3tunes* are distinguishable precisely because a
+**service provider** did the hosting or transmitting.
+
+**The load-bearing point: this only holds while the developer touches no audio.** The moment the app
+proxies, caches, transcodes server-side, or hosts any music, the analysis changes and *Aereo* becomes
+the live risk. **Design constraint: all audio must flow user-server → user-device, never through
+developer infrastructure.** Note this sits in direct tension with the Liquidsoap architecture in §5.3.
+
+### 4.4 iOS `MPMediaItem` — verified against the shipping SDK
+
+**VERIFIED by direct inspection of the iOS 27.0 SDK header** (`MediaPlayer.framework/Headers/MPMediaItem.h`,
+Xcode-beta):
+
+| Property | Availability | Status |
+|---|---|---|
+| `playCount` | `MP_API(ios(7.0))` | present, **not deprecated** |
+| `skipCount` | `MP_API(ios(7.0))` | present, **not deprecated** |
+| `rating` | `MP_API(ios(7.0))` | present, **not deprecated** |
+| `lastPlayedDate` | `MP_API(ios(7.0))` | present, **not deprecated** |
+| `assetURL` | `MP_API(ios(8.0))`, `nullable` | present, **nullable** |
+| `isCloudItem` | `MP_API(ios(8.0))` | present, **filterable** |
+| `hasProtectedAsset` | `MP_API(ios(9.2))` | present, **filterable** |
+
+**The scout's finding is CONFIRMED and now has a mechanism.** `assetURL` is declared `nullable`, and
+Apple ships `isCloudItem` and `hasProtectedAsset` as *filterable* properties precisely so a developer
+can exclude the items whose asset cannot be read. **Apple Music / iCloud Music Library tracks are
+therefore unreachable for custom mixing; only genuinely local, unprotected files yield a usable
+`assetURL`.** No deprecation of the MediaPlayer query surface was found in the iOS 27.0 header — so
+MediaPlayer is *not* deprecated in favour of MusicKit for library queries.
+
+**INFERRED, and important for the crossfade problem:** because a local file yields a real `assetURL`,
+it can be loaded into `AVAudioPlayer`/`AVPlayer`/`AVAudioEngine` under the developer's own control —
+which means **genuine crossfading and TTS interleaving are possible in the local-files variant**, and
+in *only* that variant among the platform routes. That is the one place the concept's step-3/step-5
+mechanics work natively.
+
+### 4.5 Android `MediaStore` — scout confirmed
+
+**VERIFIED** (developer.android.com/reference/android/provider/MediaStore.Audio.AudioColumns): there is
+**no PLAY_COUNT, no LAST_PLAYED, and no RATING** column. `IS_FAVORITE` exists but is declared on
+`MediaStore.MediaColumns` (inherited) and was added in **API 30 (Android 11)**; writing it for files
+you do not own requires user consent via `MediaStore.createFavoriteRequest()`. There is a `BOOKMARK`
+column and `DATE_ADDED`/`DATE_MODIFIED`, but nothing that models listening behaviour. **Android cannot
+supply a taste signal from the local library at all** — an app there would have to build its own play
+history from zero, i.e. a cold start within a cold start.
+
+### 4.6 Market sizing — the honest answer is no
+
+This is where the variant dies. Signals gathered (all VERIFIED via the GitHub and Docker Hub APIs on
+2026-09-08 unless noted):
+
+| Signal | Figure |
+|---|---|
+| Navidrome GitHub stars | 23,397 (actively developed, pushed 2026-09-07) |
+| Jellyfin GitHub stars | 56,657 |
+| `deluan/navidrome` Docker pulls | 53,470,889 |
+| `jellyfin/jellyfin` Docker pulls | 415,569,110 |
+| Plex users | ~16m monthly active streaming users, 2023 (**SECONDARY**, Wikipedia) |
+| Plexamp iOS ratings | 10,054 |
+| play:Sub iOS ($4.99) | 425 ratings |
+| Finamp iOS (free) | 207 ratings |
+| SubStreamer iOS (free) | 139 ratings |
+| Amperfy iOS (free) | 138 ratings |
+| iSub iOS (free) | 82 ratings |
+
+Reddit subscriber counts: **NO EVIDENCE FOUND** (r/selfhosted, r/jellyfin, r/navidrome, r/plexamp all
+blocked; subredditstats served no numbers and warns its own data is unreliable). IFPI download-revenue
+share: **NO EVIDENCE FOUND** (only the 2024 streaming share, 69.0% of global recorded music revenues,
+was readable at ifpi.org/our-industry/industry-data).
+
+**Docker pull counts must not be read as user counts.** They count automated CI and update pulls;
+Watchtower-style auto-updaters inflate them by orders of magnitude. They establish that the ecosystem
+is real, nothing more.
+
+**The App Store ratings are the load-bearing number, and they are brutal.** The *entire* field of
+third-party Subsonic/Jellyfin iOS clients — the direct incumbents, several free and well-liked, some a
+decade old — sits at **82 to 425 ratings each**. Plexamp, backed by a company with ~16m users and a
+marketing budget, has 10,054. A rating is typically a low single-digit percentage of installs
+(INFERRED), so even generously the paid-Subsonic-client niche looks like low tens of thousands of
+installs across all apps and all time.
+
+**The arithmetic against the bar.** $1k MRR at, say, $3/month net of Apple's cut needs roughly
+**400–500 concurrent paying subscribers**; $3k needs ~1,200–1,500. That is on the order of the *total
+lifetime rating count of the single most successful paid app in the category* — and it must be
+sustained concurrently, reached from a cold start with no audience, against free and mature
+incumbents, in a population that is famously unwilling to pay for software and technically capable of
+building its own. **Verdict: this variant cannot plausibly reach $1–3k MRR.** It is a technically
+perfect, legally clean product with an addressable market too small to clear the bar — precisely the
+failure mode the ticket asked to be tested for.
+
+---
+
+## Section 5 — The taste layer, and the inverted architecture
+
+### 5.1 ListenBrainz — the one clean, cheap, commercially-usable component
+
+**VERIFIED** (listenbrainz.readthedocs.io/en/latest/users/api/): open HTTPS API, **1 request/second**
+per client application, `Authorization: Token <token>` per-user auth, `429` on excess, higher limits
+possible for authenticated calls. A valid contactable `User-Agent` is **mandatory** — requests without
+one "may be blocked without further notice". Provides listening history, playlists and recommendations.
+**No audio.**
+
+**Commercial use is permitted and affordably priced. VERIFIED** (metabrainz.org/supporters/account-type):
+MetaBrainz asks any organisation "with a current revenue stream or an expected revenue stream" to take a
+commercial supporter tier. Published monthly minimums:
+
+| Tier | Price | Intended for |
+|---|---|---|
+| Non-profit / open-source | $0.00+ | research bodies, "authors of open-source software using our data" |
+| Stealth Start-Up | $0.00+ | "start-ups… not publicly offering their services" |
+| **Bronze** | **$100.00+** | **"popular mobile apps and… small to mid-size start-ups with public products"** |
+| Silver | $600.00+ | mid-size start-ups, established companies |
+| Gold | $1250.00+ | established companies, >20 people |
+| Unicorn | $2000.00+ | larger companies, special agreements |
+
+**Bronze at $100/month is the correct tier for this app and is the only affordable, verified,
+commercially-clean price in this entire research file.** Note that pre-revenue start-ups anticipating
+income are pushed to a commercial account, so the $0 stealth tier is a development-phase option, not a
+launch posture.
+
+**VERIFIED** (metabrainz.org/social-contract): "We won't object to commercial use of our content,
+companies can use the work of our volunteers without any charge, but charging for the content itself is
+forbidden." Factual database content is public domain; non-factual content is under Creative Commons
+licences. **CC0 is not named — NO EVIDENCE FOUND** on the specific licence identifier for ListenBrainz
+listen data (the /data/ page requires JavaScript and returned no text; the social contract explicitly
+"is not a legally binding contract" and defers to per-project licence pages).
+
+**The strategic point: this genuinely decouples personalisation from the music source.** ListenBrainz can
+supply the taste model even where audio comes from somewhere else entirely. It does *not*, however,
+rescue the licensed-catalogue variant — knowing what a user likes is worthless if the catalogue you can
+legally play does not contain it. **It rescues the *modelling* problem, not the *repertoire* problem.**
+
+### 5.2 Last.fm — BLOCKED for this use
+
+**VERIFIED** (last.fm/api/tos): the default grant is non-commercial only — "You are permitted to use the
+Last.fm Data solely for non-commercial purposes and for no other purpose". Clause 3.2: "If at any time
+you wish to use the Last.fm Data for commercial purposes, **you must apply for a commercial use
+agreement**." Commercial use without approval is a material breach permitting immediate cutoff and
+damages; enquiries go to partners@last.fm.
+
+**Pricing: NO EVIDENCE FOUND** — no fee schedule is published. The licence is royalty-free for permitted
+uses, but "Last.fm reserves the right to share in revenue generated from your use of Last.fm Data in
+future" and may attach "additional terms and/or charges".
+
+Other verified constraints: a **"Reasonable Usage Cap" of 100 MB** of stored data; mandatory caching per
+returned HTTP headers; mandatory "powered by AudioScrobbler" attribution and backlinks; **no
+sub-licensing**; audio, video, images and artwork expressly excluded; and the agreement "doesn't grant
+any music streaming rights". Rate limits are set at Last.fm's sole discretion with no published number.
+Governing law England.
+
+**Verdict: use ListenBrainz, not Last.fm.** ListenBrainz publishes a price; Last.fm requires a
+negotiation with an unknown outcome and an unknown price, and caps stored data at 100 MB.
+
+### 5.3 Icecast / Liquidsoap — technically elegant, legally the worst option
+
+**The technical claim is CONFIRMED. VERIFIED** (liquidsoap.info docs 2.4.5 quick_start and crossfade
+pages):
+- **`output.icecast`** exists and "actively pulls data out of the graph and sends it out"; `%vorbis`,
+  `host`, `port`, `password`, `mount` parameters documented. `output.file.hls` is an HLS alternative.
+- **Splicing multiple heterogeneous sources is core functionality:** `playlist`, `single`, `switch`,
+  `fallback`, `random`, `add`, `sequence`. The shipped example composes a music playlist, a jingles
+  playlist and a fallback file — structurally identical to music + podcast + TTS.
+- **Crossfading is first-class:** `cross` ("an advanced crossfading operator"), the ready-made
+  `crossfade` wrapper in `utils.liq`, and `cross.smart` with `~fade_in`, `~fade_out`, `~high`,
+  `~medium`, `~margin`, `~default` — transitions chosen per-rule from measured dB levels at the track
+  boundary.
+- Practical gotcha: playlists are *fallible* and outputs demand infallible input, so `mksafe`, a
+  `fallback` security source, or `fallible=true` is required.
+
+**So this architecture does solve the interleaving and crossfade problem outright** — the splice is
+yours, which is exactly what every platform-native route denies. It is the only architecture in the
+whole sweep where concept steps 3–5 are fully implementable.
+
+**And it is the worst option on every other axis.**
+
+1. **Licensing burden becomes entirely the developer's** — straight back to Section 2, including the
+   $0.0032/performance escalator, the unknown ASCAP/SESAC/GMR minimums, and the advance-announcement
+   bar.
+2. **It makes the interactivity problem *worse*, not better. INFERRED (high confidence):** a
+   per-listener personalised stream is closer to "a program specially created for the recipient" —
+   §114(j)(7)'s exact language — than anything else considered here. The architecture that best solves
+   the engineering problem is the one most likely to be classed **interactive** and therefore
+   ineligible for the statutory licence.
+3. **The one-to-many economics invert. VERIFIED** (quick_start): "It is then sent by the server to
+   every listener. The more listeners you have, the more bandwidth you need." Icecast's efficiency comes
+   from duplicating *one* feed to many listeners. Personalisation requires **one Liquidsoap source
+   chain and one mount point per listener** — so the developer pays for N independent
+   encode-plus-crossfade pipelines. **NO EVIDENCE FOUND** in the Liquidsoap docs on per-user stream
+   patterns; the documentation index has no such topic, which is itself telling. **INFERRED:** CPU cost
+   scales linearly with concurrent listeners because every stream is separately mixed and encoded, and
+   bandwidth scales linearly too — the opposite of the broadcast economics Icecast was built for. A
+   server-side per-user pipeline is a per-user marginal cost against a $3/month subscription.
+4. **It breaks §4.3's safe harbour.** Server-side mixing means the developer handles the audio, which
+   forfeits the private-performance argument that made the self-hosted variant licence-free.
+
+**Verdict: technically feasible, and the correct answer only if the licensing problem were already
+solved.** It is not a route around Section 2; it is the most expensive way into it.
+
+---
+
+## Synthesis — which routes are live, and what each costs
+
+| Route | Live? | Cost (verified only) | Plays music the user knows? |
+|---|---|---|---|
+| **Feed.fm / Adaptr** | Conditionally | Enterprise: NO EVIDENCE FOUND. Adaptr 2021 archived: $99–$2,399/mo (SECONDARY, stale) | **YES** — major-label, chart artists |
+| **Tuned Global** | No | n/a — cannot license you music | n/a |
+| **7digital / MassiveMusic** | No, at this budget | NO EVIDENCE FOUND + you pay all royalties | Yes, but unreachable |
+| **Mubert** | No | $99/$249/$999/mo published, caps ~16 listeners | **No** — AI-generated, instrumental |
+| **Direct statutory (US)** | Conditionally | $1,000/yr/channel + $350 BMI verified; ASCAP/SESAC/GMR unknown; **$0.0032/performance is the real cost** | **YES** — full repertoire |
+| **Deezer** | No | n/a — non-commercial ToS | n/a |
+| **Subsonic / Jellyfin** | **YES** | **$0** licensing | **YES** — it is literally their own library |
+| **iOS local files** | Partially | **$0** | **YES** — but only non-DRM local files |
+| **ListenBrainz** (taste only) | **YES** | **$100/mo** (Bronze) | n/a — no audio |
+| **Last.fm** (taste only) | No | NO EVIDENCE FOUND; needs negotiated agreement | n/a |
+| **Icecast / Liquidsoap** | Technically | Section 2's burden + per-listener server cost | Depends on the licence you obtain |
+
+### The decisive question for ticket 05
+
+**Does ANY legal route let the app play music the user already knows and likes?**
+
+**Yes — three do. But each carries a different disqualifying cost, and none is both familiar and
+affordable with the AI DJ intact.**
+
+1. **The user's own library (Subsonic / Jellyfin / iOS local files).** The *only* route that is
+   simultaneously legal, free, and guaranteed-familiar — it is the user's own music by definition, and
+   Jellyfin's `PlayCount`/`IsFavorite`/`LastPlayedDate` give the richest taste signal in the entire
+   sweep. It is also the only route where full crossfade and TTS interleaving work natively. **It fails
+   on addressable market, not on law or engineering** (§4.6): the whole incumbent field sits at 82–425
+   App Store ratings each, and $1k MRR needs ~400–500 concurrent subscribers from a cold start against
+   free mature competitors. **And note it needs no advance-announcement compromise — private
+   performance is outside §114 entirely, so the AI DJ can announce freely. This is the only route where
+   step 5 survives fully intact.**
+2. **Feed.fm / Adaptr.** Real major-label catalogue, real indemnification, live self-serve signup at
+   Adaptr, actively-maintained iOS SDK. **Two unresolved blockers:** the §5.6/§5.5(a) insertion and
+   alteration ban (which appears to prohibit exactly the TTS DJ inserts the concept requires), and
+   pricing that is entirely unknown for the enterprise tier. **This is the route worth an enquiry
+   email**, and it is the only one where the answer could plausibly change the verdict.
+3. **Direct statutory licensing (US only).** Full repertoire and an affordable-looking $1,000/yr
+   minimum — but the per-performance rate makes it structurally loss-making (≈$17,500/yr at 1,000
+   subscribers against a $12k–36k/yr target), the artist/album complement limits are incompatible with
+   artist-concentrated personal libraries, per-user channel counting is unresolved, and **the AI DJ
+   must be reduced to back-announcing only.**
+
+**The finding that reframes the brief.** The risk was framed as five-figure minimums. The real
+constraint sits upstream and is not about price at all: **the pre-announcement prohibition in
+§114(d)(2)(C)(ii) means "an AI DJ that announces tracks in advance" and "cheap licensed familiar music"
+are mutually exclusive.** Every route to familiar music at low cost runs through either the statutory
+licence (which bans advance announcement) or a vendor's stream (which bans insertion). Only the user's
+own files escape both — and that route's market is too small.
+
+**A live secondary option worth noting:** the concept's *non-music* components carry no equivalent
+blocker. Third-party podcasts via open RSS, news audio, ListenBrainz taste data at $100/month, and TTS
+DJ segments are all tractable for a solo developer. **And announcing podcast episodes in advance is
+entirely legal**, because the pre-announcement bar is a sound-recording statutory-licence rule. A
+spoken-audio-first product would keep the DJ premise and drop the component that is structurally out of
+reach.
+
+**Do not treat as settled:** Feed.fm and 7digital pricing and minimums; whether Feed.fm would grant
+written consent for TTS inserts; Adaptr's current pricing and eligibility; Mubert's Custom-tier terms;
+ASCAP/SESAC/GMR minimums; PPL and PRS figures; SoundExchange per-user channel counting; whether a
+liked-songs pool survives §114(j)(7) after *Launch Media*; and podcast insertion rights. **Do not budget
+for "find a cheaper music API" — the obstacle is not the vendor's price list.**
+
+### Method limitations
+
+**WebSearch was unavailable for the entire session** (HTTP 400 validation error on every call), and
+DuckDuckGo/Mojeek served CAPTCHAs. All findings rest on direct primary-source fetches, the Wayback CDX
+API, the GitHub and Docker Hub APIs, the iTunes Search API, and direct inspection of the local iOS 27.0
+SDK headers. **Consequence: "NO EVIDENCE FOUND" means "not found in this session", not "does not
+exist".** The verdicts are robust for primary sources and archives but weaker for secondary reporting —
+press interviews, conference talks, job postings and forum threads mentioning deal sizes went largely
+unsearched. A follow-up pass with working search is worth doing specifically on Feed.fm contract values
+and any customer disclosure of pricing. Several sites also returned 403 to automated fetches
+(ascap.com, soundexchange.com, plex.tv, Justia, G2, Crunchbase), so the PRO and SoundExchange figures
+above come from eCFR/Cornell and BMI rather than the collectives' own pages.
+
+### Corrections to the scout's candidate list
+
+1. **Tuned Global does not offer sub-licensing** and cannot license you music — it is technology plus
+   consultancy. Remove it as a B2B peer of Feed.fm.
+2. **Deezer's blocker is its non-commercial ToS, not its SDK.** The scout's "portal live, history
+   endpoint responding" reading was over-optimistic: `/user/me/history` returns HTTP 200 with an
+   OAuthException error body, and ToS Section IV forbids commercial use outright.
+3. **Jellyfin is not natively Subsonic-compatible** — only via an unmaintained third-party bridge. Use
+   its own API, which is better anyway and has an official Swift SDK.
+4. **Funkwhale implements only a subset** of the Subsonic API, and admins can disable it.
+5. **Mubert's "sub-licensing on a paid tier"** is not supported by any readable licence text; the
+   readable text bars distribution via Music Streaming Services.
+6. **Feed.fm's insertion/alteration ban** was not in the scout's table and is the most important
+   single clause about that vendor.
+
+
+
 

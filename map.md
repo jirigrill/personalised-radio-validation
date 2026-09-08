@@ -135,6 +135,46 @@ Each ticket must state explicitly which of its findings were carried over and wh
   doremiradio 0; largest relevant indie InstaPodz 156. Caveats: `WebSearch` broken all session, and
   Apple's review RSS returned empty for every app — **no user review text was obtained anywhere**,
   the largest gap.
+- [04b — Wider platform sweep](issues/04b-wider-platform-sweep.md) — **The blocker is not price. It
+  is that the AI DJ announcing tracks in advance is legally incompatible with every affordable route
+  to familiar music.** **17 U.S.C. §114(d)(2)(C)(ii)** (VERIFIED, and independently re-verified by the
+  orchestrator at Cornell) bars a statutorily-licensed webcaster from causing or facilitating
+  publication, via "an advance program schedule or prior announcement", of "the titles of the specific
+  sound recordings to be transmitted" or "the names of the featured recording artists". Flat
+  prohibition, no de minimis — only vague untimed artist teasers survive. **That is concept step 5,
+  and it binds every statutory route, Feed.fm Radio included.** The vendor-side equivalent is Feed.fm
+  T&C §5.6/§5.5(a), barring insertion into or alteration of the stream. **One correction to the
+  ticket's own premise**: personalisation is *not* interactive by definition — *Arista v. Launch
+  Media* (2d Cir. 2009) held LAUNCHcast non-interactive on a control-vs-influence test. But a
+  your-liked-songs pool is a materially harder case, because LAUNCHcast survived precisely by *not*
+  being a library player. Lawyer required. **Verified costs**: SoundExchange minimum **$1,000/yr per
+  channel** and **$0.0032/performance** (37 CFR §380.10) → **≈$17,500/yr at 1,000 subscribers**
+  against a $12–36k/yr revenue target — the minimums are affordable, the per-performance rate is what
+  kills it, and how SoundExchange counts "channels" for per-user personalised streams is the
+  highest-leverage unknown in the cost model. **ListenBrainz commercial use is $100/mo** (MetaBrainz
+  Bronze) — the only affordable, cleanly-priced, verified component in the whole sweep. **Feed.fm /
+  7digital / Tuned Global pricing: NO EVIDENCE FOUND** (`WebSearch` down all session) → 2 TASK tickets
+  filed. **Hypotheses from the unattributed pass, now resolved**: (a) Tuned Global is
+  **technology-only, not a rights provider — CONFIRMED**, correcting the scout's table; (b) Feed.fm
+  SDKs live (iOS v5.8.0, 2026-06-02) and it is the only full bundler — CONFIRMED; (c) 7digital makes
+  you the royalty payer and the DMCA bars pre-announcing — CONFIRMED both limbs; (d) royalty-free/CC =
+  masters only → PRO liability — **PARTIAL, overstated** (CC 4.0 expressly includes public
+  performance; the real risk is *authority*, not scope); (e) Mubert terms unpublished and
+  contradictory — CONFIRMED. **New blocks**: **Deezer is dead on its ToS, not its SDK** — Section IV is
+  literally titled "NON-COMMERCIAL USE", use "limited to a strictly private use within a family
+  scope"; the scout's "`/user/me/history` returns 200" was a 200 with an OAuthException body.
+  **Jellyfin is not natively Subsonic-compatible** (only an unmaintained 2022 bridge) but has an
+  official Swift SDK and the richest taste signal found. **iOS `MPMediaItem` verified against the
+  local iOS 27.0 SDK header**: play-count properties all present and not deprecated; `assetURL`
+  nullable with `isCloudItem`/`hasProtectedAsset` as filterable flags. **The answer for 05**: three
+  routes play familiar music; **none is familiar + affordable + DJ-compatible**. The user's **own
+  library** is the only route that is legal, free, familiar **and** lets the DJ announce freely
+  (private performance sits outside §114 entirely) — it fails purely on market size: the whole
+  incumbent iOS field sits at **82–425 App Store ratings each**, and $1k MRR needs ~400–500 concurrent
+  subscribers cold-start against free mature competitors. **The escape hatch worth carrying to 05 and
+  13**: announcing *podcast* episodes in advance is perfectly legal — the pre-announcement bar is a
+  **sound-recording** rule. A spoken-audio-first product keeps the DJ premise and drops the one
+  structurally unreachable component.
 
 ## Not yet specified
 
