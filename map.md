@@ -175,6 +175,33 @@ Each ticket must state explicitly which of its findings were carried over and wh
   13**: announcing *podcast* episodes in advance is perfectly legal — the pre-announcement bar is a
   **sound-recording** rule. A spoken-audio-first product keeps the DJ premise and drops the one
   structurally unreachable component.
+- [02 — Apple Music / MusicKit](issues/02-apple-music-feasibility.md) — **BLOCKED on contract, not on
+  code.** The ticket's designated make-or-break question resolves *in the concept's favour* and it
+  does not matter: Apple Music audio and third-party audio **can** coexist in one `AVAudioSession`
+  (`prepareToPlay()` interrupts only "nonmixable" sessions; `.playback` + `.mixWithOthers` set once),
+  and playback control is **better than Spotify's** — app-owned queue, `pause()`, settable
+  `playbackTime`. The concept dies on the licence. **DPLA §3.3.6(D)** (Aug 18 2026 ed., p.32),
+  VERIFIED verbatim, three independently fatal clauses: (i) **"MusicKit Content cannot be synchronized
+  with any other content"** — names the interleaving mechanic exactly; (ii) purpose-limitation to
+  "facilitating access to Your end users' Apple Music subscriptions", relevance at Apple's sole
+  discretion; (iii) **"You agree not to require payment for or indirectly monetize access to the Apple
+  Music service (e.g. in-app purchase, advertising, requesting user info)"**. **Clause (iii) is the
+  hardest finding and was not in the map's framing** — it survives any amount of engineering: even a
+  variant that satisfied the synchronization clause has **no legal revenue model** at the $1–3k MRR
+  bar, and going free does not help, because the clause names advertising and free cannot clear
+  $1k/mo. Independently re-verified by the orchestrator: **ASRG 4.10** names "Apple Music access"
+  explicitly, and **4.5.2(i)** repeats the prohibition almost verbatim. **Crossfade is BLOCKED** —
+  zero volume/gain/mute symbols in MusicKit, `PlayParameters` documented "opaque"; hard cut is the
+  ceiling. **This corrects ticket 07's report** of a usable `crossfade(duration:)` on iOS 18+.
+  **No listening history** (10 resources / 30 tracks cap) and **no podcast data on any Apple API** —
+  the latter breaks concept step 2 independently and is **Apple-wide, not MusicKit-specific**, so any
+  iOS-first variant needs RSS/OPML import regardless of music source. **Two corrections to likely
+  priors**: no broadcast/radio-station prohibition exists in any Apple document — do not cite one; and
+  **no standalone MusicKit ToS exists** — the DPLA is the operative contract. Apple's competitive
+  threat is LOW; Spotify is the incumbent. Caveats: Apple Developer Forums return Cloudflare 403 to
+  automated fetching, and no Apple engineer statement exists on which session `ApplicationMusicPlayer`
+  uses internally — the process-locality reasoning is INFERRED from the API surface plus third-party
+  reports.
 
 ## Not yet specified
 

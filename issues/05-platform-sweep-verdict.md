@@ -83,7 +83,19 @@ So add these questions to the session, ahead of the original four:
    only worth it if a licensed route survives.
 
 Also carry in: **Deezer is blocked** on non-commercial ToS, not its SDK (04b); **Tuned Global is
-technology-only and cannot license music** (04b, correcting the earlier scout pass); **Apple ships a
-real `crossfade(duration:)` from iOS 18+** but MusicKit has **no podcast type anywhere** (07); and
-**Tidal's `@tidal-music/player` supports `AssetPresentation.FULL`** — the only documented third-party
+technology-only and cannot license music** (04b, correcting the earlier scout pass); and **Tidal's
+`@tidal-music/player` supports `AssetPresentation.FULL`** — the only documented third-party
 full-track path found (07).
+
+**Apple is BLOCKED on contract despite winning on code** (02). Both of 07's Apple findings were
+corrected by the deeper pass: MusicKit has **no podcast type anywhere** (confirmed), and the
+`crossfade(duration:)` that 07 reported as relieving the hard-cut ceiling **does not exist in
+MusicKit** — there are zero volume/gain/mute symbols and `PlayParameters` is documented "opaque".
+**Hard cut is the ceiling on Apple too.** The decisive Apple clause is one the map had not
+anticipated: **DPLA §3.3.6(D) bars requiring payment for or indirectly monetizing access to Apple
+Music**, reinforced by ASRG 4.10 and 4.5.2(i). So Apple has **no legal revenue model at this bar at
+all** — question 3 below cannot be answered "Apple" whatever the engineering says.
+
+Note also that **no Apple API exposes podcast data**, which breaks concept step 2 independently of
+the music source. **Any iOS-first variant needs RSS/OPML import** — worth deciding in this session,
+because it applies to the local-library and licensed-catalogue variants too.
