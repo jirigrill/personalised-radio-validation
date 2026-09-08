@@ -83,17 +83,46 @@ Each ticket must state explicitly which of its findings were carried over and wh
 
 <!-- one line per resolved ticket: gist + link -->
 
-_None yet — the map has just been charted._
+- [07 — Incumbent-feature teardown](issues/07-incumbent-features.md) — **The differentiator is
+  occupied, and Spotify's policy bars the core mechanic by name.** Decisive new clause, VERIFIED
+  independently by the orchestrator against <https://developer.spotify.com/policy>: **Policy III.7 —
+  "Do not permit any device or system to segue, mix, re-mix, or overlap any Spotify Content with any
+  other audio content"** (extending even to other Spotify material). That names the exact verbs for
+  concept steps 3 and 5. It joins **III.5** ("integrated with streams or content from another
+  service" — upgrading the map's carried-over INFERRED-fatal flag to **VERIFIED**) and **III.4**
+  (bars non-interactive webcasting). The trap: Spotify's add-to-queue endpoint **explicitly accepts
+  `episode` URIs**, so the mechanic is one API call away technically and contractually out of reach.
+  **Step 5 is occupied**: Spotify DJ ships AI voice commentary over personalised music at no
+  incremental charge to Premium — 75+ markets, 6 languages, still expanding May 2026, and on Android
+  Auto (the developer's own commute context); YouTube Music's "Beyond the Beat" is a second entrant.
+  **Steps 3+4 were shipped and killed by Spotify itself**: *Your Daily Drive* (June 2019) interleaved
+  WSJ/NPR/PRI news with personalised songs in a drive-time format and was retired with no
+  announcement before Apr 2026 — cause of death NO EVIDENCE FOUND. Graveyard's lesson: **talk you own
+  scales; talk you license does not** (Daily Drive needed bilateral publisher deals per market) —
+  load-bearing against step 4. **Apple inverts the map's ranking**: MusicKit has *no podcast type
+  anywhere* (structurally uninterested, not one API call away), but is the most open surface and ships
+  a real `crossfade(duration:)` from iOS 18+, relieving the hard-cut ceiling flagged in 05. **Tidal
+  correction**: `@tidal-music/player` supports `AssetPresentation.FULL` — the only documented
+  third-party full-track playback path found. **Unoccupied: one and a half of five steps**; only step
+  3 has a real claim, and it is vacant because Spotify vacated it. Caveat: `WebSearch` failed all
+  session, so findings are strong on clauses and weak on press/sentiment.
 
 ## Not yet specified
 
+- **Whether a "talk you own" pivot is the surviving concept.** Ticket 07's graveyard analysis
+  produced a structural lesson the map did not have: *talk you own scales; talk you license does
+  not* — Spotify's own Daily Drive died needing bilateral publisher deals per market. Combined with
+  Policy III.7 barring the segue mechanic on licensed music, this points at a variant where the
+  **talk** is generated or owned rather than licensed. Too unsharp to ticket until 05 and 06 land,
+  but it is now the most likely surviving shape and should not be lost.
 - **The commuting / offline case as a second independent blocker.** Continuous radio while
   commuting implies CarPlay + Android Auto, hands-free control, poor connectivity, and buffering
   ahead. Prior work found **Spotify ToS IV.3.b bars local caching of Spotify Content beyond
   metadata and cover art** — so a stream that cannot buffer may be unusable in precisely the
   developer's own use case. Cannot be sharpened until the platform sweep says which platform (if
   any) survives; the question is different for a licensed-catalogue variant, where caching is the
-  developer's own call.
+  developer's own call. Note that Spotify DJ already ships **on Android Auto**, so the incumbent
+  occupies the commute directly.
 - **Which concept variant to price and spec**, once the platform sweep lands. Platform-native,
   licensed/royalty-free catalogue, and local-library variants likely differ enough in cost,
   audience, and legal posture that each may need its own arithmetic.
