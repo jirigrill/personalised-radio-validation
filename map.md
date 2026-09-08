@@ -202,6 +202,43 @@ Each ticket must state explicitly which of its findings were carried over and wh
   automated fetching, and no Apple engineer statement exists on which session `ApplicationMusicPlayer`
   uses internally — the process-locality reasoning is INFERRED from the API surface plus third-party
   reports.
+- [04 — Tidal](issues/04-tidal-feasibility.md) — **BLOCKED. Tidal is the *least* permissive of the
+  four, not the most** — the ticket's premise is false, falsified by Tidal's own published Developer
+  Guidelines rather than by inference. **Discovery method worth recording**: `developer.tidal.com` is a
+  React SPA, so `curl`/WebFetch of any docs URL returns an empty shell and a casual check appears to
+  show no terms at all; the legal text is served from lazily-loaded JS chunks. The orchestrator
+  independently fetched `/assets/developer-guidelines-3_0-DN4FTLfL.js` and **confirmed all four
+  decisive clauses verbatim**. **The paradox**: Tidal has the *best* technical offering in the sweep
+  and the *worst* legal one. Real playback SDKs on iOS/Android/Web (AVPlayer/ExoPlayer — genuine audio
+  engines, not a remote-control shim) with `pause()`, `seek()`, `assetPosition`, `setNext()`:
+  mechanically the exact primitives the concept needs. Guidelines v3.0 §III prohibits: **"Creation or
+  inclusion of functionality that segues, overlaps, mixes or re-mixes any TIDAL content or otherwise
+  alters TIDAL content or combines any TIDAL content with any other audio content (including without
+  limitation other TIDAL content)"** — **that parenthetical is the finding that matters most: it bars
+  segueing Tidal into Tidal, so there is no narrower same-service variant to retreat to.** The
+  prohibition is on the *mechanic*, not the scope. Plus **"Integrating TIDAL content with content or
+  streams from another service"**, a non-interactive-webcasting bar, an AI/ML ban, and **"Generating
+  news media"** — the concept trips five clauses. Crossfade exists (0–15s, web + iOS) but accepts only
+  a `MediaProduct` (`TRACK`/`VIDEO`) — it cannot be pointed at external audio; no ducking API; volume
+  is one global Tidal-wide level. Coexistence is technically policed too: the API enumerates
+  `CONCURRENT_PLAYBACK` 403s and revokes streaming privileges. **Independently fatal**: third parties
+  get **30-second previews only**; caching limited to *"metadata and cover art"* (killing the
+  developer's commuting case); **zero podcasts on Tidal** — discontinued 24 Jul 2024, forcing an
+  external podcast source, which triggers the interleaving clause. Closed loop. Production Mode also
+  requires **manual review of your source code**. **Addressable audience**: no current subscriber
+  number exists — Tidal has never disclosed, nor has Block; last verifiable figure is **2.1M (2020,
+  court documents)**, nothing credible since. Sub-1% share. **Block has written off ~$266M of $297M
+  (~89%)** and said it is "scaling back our investment in Tidal". No free tier, so users need two
+  subscriptions. The agent **refused to model a funnel rather than invent a numerator** — correct per
+  the map's standing preferences. **Two findings that generalise**: the *"metadata and cover art only"*
+  caching formula now appears verbatim in **both** Spotify's and Tidal's terms, and a near-identical
+  "another service" clause appears **independently drafted** in a second platform's terms — evidence
+  this is a **standard label-licensing requirement, not Spotify's idiosyncrasy**. That materially
+  strengthens the inherited Spotify finding and points at the licensed-catalogue and local-library
+  variants as where the surviving concept lives. Confidence caveats: v3.0 (6 May 2024) is the newest
+  in the live bundle but the runtime version endpoint needs auth, so "effective" is unconfirmed; and
+  full-length playback *may* be reachable post-approval (the `playback` scope is `THIRD_PARTY`-tier) —
+  moot given §III, so marked PARTIAL-on-paper rather than certain.
 
 ## Not yet specified
 

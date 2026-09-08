@@ -664,3 +664,127 @@ vs $1.33 cheapest CPI):
 if it were technically and legally permissive. As it happens it is neither — so this section is
 confirmation, not the deciding factor. **Do not build the Tidal variant, and do not treat Tidal as
 a fallback if another platform fails.**
+
+---
+
+## Hard blockers vs workarounds
+
+### Hard blockers (no permissible workaround)
+
+| # | Blocker | Source | Why there is no way round it |
+|---|---|---|---|
+| **HB1** | "Integrating TIDAL content with content or streams from another service" is a strictly prohibited offering type. | Guidelines v3.0 §III | Names the concept's core mechanic. Escape hatch is "TIDAL's express written approval" — a negotiated deal the map puts out of scope. |
+| **HB2** | Combining Tidal audio with **any** other audio — including other Tidal audio — is prohibited: "segues, overlaps, mixes or re-mixes … or combines any TIDAL content with any other audio content (including without limitation other TIDAL content)". | Guidelines v3.0 §III | The parenthetical removes the same-service carve-out. Even a Tidal-only radio programme that segues song→song is prohibited. This is the clause with no narrower variant. |
+| **HB3** | "Use TIDAL Content in podcasts". | Terms v3.0 §II | Flat prohibition, no approval carve-out. |
+| **HB4** | AI/ML use of Tidal content prohibited — twice, once with no approval carve-out. | Terms v3.0 §II; Guidelines v3.0 §III | Kills AI intros/outros (map step 5), and plausibly the personalisation engine itself. |
+| **HB5** | "Generating news media". | Guidelines v3.0 §III | Kills news segments (map step 4). |
+| **HB6** | Third-party playback is previews only; full-length is Embeds-only or internal-only auth flows. | api-sdk-overview; both mobile SDK READMEs; Auth README; Terms §I | Cannot play a full song in a native app. No published route to change this. |
+| **HB7** | Local caching limited to "temporary caching of metadata and cover art"; "Do not store TIDAL Content indefinitely." | Terms v3.0 §II | Kills the commuting/offline case — the developer's own primary use. |
+| **HB8** | No podcast content on Tidal at all; discontinued 24 Jul 2024. | OpenAPI spec (0 hits); Tidal spokesperson; Tidal help centre | Forces an external podcast source, which triggers HB1. Closed loop. |
+| **HB9** | Source-code review gate for Production Mode, tied to a declared use case, revocable. | Terms v3.0 §IV | Removes "ship it and hope". A human reads the code against HB1–HB5. |
+| **HB10** | Addressable audience undisclosed, sub-1% share, owner has written off 89% and is disinvesting. | Block filings; MIDiA/Statista; Block statements | Not a legal blocker — an economic one. Fails the $1k/mo bar on any honest assumption. |
+
+### Things that look like workarounds but are not
+
+- **"Use the crossfade API to blend podcast into music."** The crossfade surface only accepts a
+  `MediaProduct` (`TRACK`/`VIDEO`), i.e. Tidal catalogue items. There is no API accepting an
+  external source. Technically impossible *and* barred by HB2.
+- **"Run two independent audio players and hard-cut between them."** A hard cut *is* a segue
+  (HB2), and the arrangement *is* integrating with another service (HB1). Technically it also
+  fights a process-wide `AVAudioSession` and risks server-side `CONCURRENT_PLAYBACK` revocation.
+- **"Only interleave Tidal music with Tidal music, drop podcasts."** Still barred — HB2's
+  parenthetical explicitly covers "other TIDAL content". And it is no longer the concept.
+- **"Ship in 'in development' mode without seeking approval."** Quota-limited and preview-only by
+  design; not a shippable product, and Terms §IV reserves Tidal's right to monitor and block.
+- **"Use the raw `url` from `/trackFiles/{id}` with your own mixer."** Requires the `playback`
+  scope, and Guidelines §II states Playbacks "will only be available through our SDKs, namely, an
+  official, unmodified version of the TIDAL Player module, and **TIDAL will reject any quota
+  extension requests for any Offering that attempts to circumvent this**." Explicitly anticipated
+  and refused.
+- **"Ask Tidal for written approval."** Legitimate in principle — Guidelines §III's prohibitions
+  are conditional on "unless you have TIDAL's express written approval". But this is a negotiated
+  licence with a disinvesting rightsholder, for a use case that violates five separate clauses, on
+  behalf of a solo developer at a $1–3k MRR bar. The map places this out of scope, and HB3/HB4
+  (Terms §II) have **no approval carve-out** at all.
+
+### What this means for the map
+
+- **Tidal is eliminated as a platform-native music source.** It should not be treated as a
+  fallback if Spotify/Apple/YouTube Music fail; it is strictly worse than all three.
+- **The map's premise about Tidal was wrong and should be corrected**, not softened: Tidal is the
+  *least* permissive of the four, and the finding is VERIFIED rather than inferred.
+- **This strengthens the inherited Spotify finding.** The map flagged Spotify's "another service"
+  clause as INFERRED-fatal and the top verification priority. Finding a near-identical clause,
+  independently drafted, in a second platform's terms is evidence that this is an industry-standard
+  label-licensing requirement rather than one platform's idiosyncrasy. **INFERRED (moderate-to-high
+  confidence):** the platform-native variant is likely blocked everywhere, and the map's
+  licensed-catalogue and local-library variants are where the surviving concept lives.
+- **Two constraints generalise beyond Tidal** and are worth carrying into the remaining tickets:
+  (i) the "metadata and cover art only" caching formula now appears verbatim in both Spotify's and
+  Tidal's terms — treat the offline/commuting case as blocked on any platform-native variant until
+  proven otherwise; (ii) explicit AI/ML prohibitions on catalogue content are appearing in
+  developer terms, which bears on the AI-intro feature on any platform.
+
+---
+
+## Evidence limits and open items
+
+Stated so a reader can judge confidence rather than infer it.
+
+- **Terms version currency.** All quotes are from Developer Terms and Developer Guidelines
+  **v3.0, "as of May 6, 2024"**, the newest present in the live SPA bundle. The app resolves the
+  current version at runtime via `GET /v2/terms?filter[termsType]=DEVELOPER&filter[isLatestVersion]=true`,
+  which requires authentication (returns `UNAUTHORIZED` unauthenticated). **I could not confirm
+  v3.0 is the effective version** rather than a newer one served dynamically. Low risk to the
+  verdict: the interleaving and mixing prohibitions are present in v3.0 and there is no indication
+  of relaxation.
+- **Full-length playback for approved third parties.** `Authorization Code Flow` is documented for
+  third parties and the `playback` scope is `THIRD_PARTY`-tier, so full-length playback *may* be
+  reachable post-approval. Tidal's overview page says only "previews" without qualification.
+  I have marked this PARTIAL-on-paper / BLOCKED-in-practice rather than claiming certainty. Moot
+  given §3.
+- **NO EVIDENCE FOUND** (each checked, not assumed): numeric rate limits or quota values; a named
+  commercial/revenue-share agreement for developers; any ducking API on any platform; any public
+  crossfade setting on Android; any listening-history, top-items or recently-played endpoint; any
+  Tidal subscriber estimate after 2020; any Tidal-subscriber × podcast-listener overlap figure; the
+  precise date the US free tier was discontinued; any confirmed Tidal sale process or shutdown.
+- **Method note.** WebSearch was unavailable throughout this research (HTTP 400) and DuckDuckGo's
+  HTML endpoint now serves a CAPTCHA. Primary sources were therefore retrieved directly by `curl`
+  against `developer.tidal.com` asset chunks, `raw.githubusercontent.com`, the GitHub API, and
+  Tidal's Zendesk help-centre API; discovery used Google News RSS. `tidal.com` itself returns 403
+  to non-JS clients, which is why pricing is cited from `support.tidal.com` rather than
+  `tidal.com/pricing`.
+- **Not independently re-verified by me:** the Block financial figures, market-share positioning,
+  layoff history, and the podcast-discontinuation quote were established by a delegated research
+  pass against SEC filings, Reuters, Fortune, ecoustics and Tidal's help centre, with URLs given
+  inline above. The §1–§5 findings — every ToS clause, every API and SDK claim — I verified
+  directly from primary artefacts myself.
+
+## Sources
+
+**Primary — Tidal legal (verbatim quotes above):**
+- Developer Terms v3.0 — <https://developer.tidal.com/documentation/guidelines/guidelines-developer-terms>
+  (text: `https://developer.tidal.com/assets/developer-terms-3_0-BhtucITZ.js`)
+- Developer Guidelines v3.0 — <https://developer.tidal.com/documentation/guidelines/guidelines-developer-guidelines>
+  (text: `https://developer.tidal.com/assets/developer-guidelines-3_0-DN4FTLfL.js`)
+
+**Primary — Tidal technical:**
+- API & SDK overview (previews-only note) — <https://developer.tidal.com/documentation/api-sdk/api-sdk-overview>
+- Quick start — <https://developer.tidal.com/documentation/api-sdk/api-sdk-quick-start>
+- API reference — <https://tidal-music.github.io/tidal-api-reference/>
+- OpenAPI spec `TIDAL API 1.10.104` — <https://github.com/tidal-music/tidal-sdk-web/blob/main/packages/api/bin/tidal-api-oas.json>
+- Player design doc — <https://github.com/tidal-music/tidal-sdk/blob/main/Player.md>
+- iOS Player README / `Configuration.swift` — <https://github.com/tidal-music/tidal-sdk-ios>
+- Android Player README — <https://github.com/tidal-music/tidal-sdk-android>
+- Web `set-transition-mode.ts`, `set-volume-level.ts`, `auth/README.md` — <https://github.com/tidal-music/tidal-sdk-web>
+
+**Primary — Tidal consumer:**
+- Subscription types & pricing — <https://support.tidal.com/hc/en-us/articles/115003662825-Subscription-Types>
+- Audio Format Updates (podcast/MQA/360RA removal) — <https://support.tidal.com/hc/en-us/articles/25876825185425-Audio-Format-Updates>
+
+**Secondary:**
+- Podcast discontinuation quote — <https://www.ecoustics.com/news/tidal-drops-mqa-360ra-podcasts/>
+- "Terrible business decision" ruling — <https://www.reuters.com/legal/judge-dismisses-lawsuit-over-blocks-terrible-purchase-jay-zs-tidal-2023-05-09/>
+- Block layoffs / Jay-Z reporting — <https://fortune.com/2024/11/07/block-employees-jay-z-tidal-layoffs/>
+- Block scaling back Tidal — <https://techcrunch.com/2024/11/07/block-scales-back-tidal-investment-and-shutters-tbd-in-favor-of-bitcoin-mining/>
+- Tidal launched podcasts 2017 — <https://variety.com/2017/digital/news/tidal-podcasts-1202471082/>

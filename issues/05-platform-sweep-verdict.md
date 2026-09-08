@@ -82,10 +82,26 @@ So add these questions to the session, ahead of the original four:
    review) before deciding, or decide without them? 15 is free and slow; 16 costs real money and is
    only worth it if a licensed route survives.
 
-Also carry in: **Deezer is blocked** on non-commercial ToS, not its SDK (04b); **Tuned Global is
-technology-only and cannot license music** (04b, correcting the earlier scout pass); and **Tidal's
-`@tidal-music/player` supports `AssetPresentation.FULL`** — the only documented third-party
-full-track path found (07).
+Also carry in: **Deezer is blocked** on non-commercial ToS, not its SDK (04b); and **Tuned Global is
+technology-only and cannot license music** (04b, correcting the earlier scout pass).
+
+**Tidal is BLOCKED, and 07's hopeful reading of it is withdrawn** (04). `AssetPresentation.FULL`
+exists in the SDK, but third parties get **30-second previews only** in practice, and Guidelines v3.0
+§III bars the mechanic in terms even wider than Spotify's: it prohibits functionality that "segues,
+overlaps, mixes or re-mixes any TIDAL content … **or combines any TIDAL content with any other audio
+content (including without limitation other TIDAL content)**". That parenthetical removes the fallback
+of a music-only, same-service variant — the prohibition is on the *mechanic*, not the scope. Tidal
+also has **zero podcasts** (discontinued Jul 2024), so an external source is forced, which trips the
+integration clause: a closed loop. And it is commercially marginal — last verifiable subscriber figure
+is 2.1M (2020); Block has written off ~89% of its investment.
+
+**The pattern across all four platforms is now the finding.** Every platform resolved so far is
+blocked by contract rather than by capability, and the same two formulas — *"metadata and cover art
+only"* caching, and a bar on integrating with "another service" — appear **independently drafted** in
+Spotify's and Tidal's terms. That is evidence of a **standard label-licensing requirement**, not one
+platform's idiosyncrasy. The implication for this session: **there is probably no permissive
+platform-native route to find**, and the conversation should move to the licensed-catalogue,
+local-library, and spoken-audio-first variants rather than hunting for a friendlier platform.
 
 **Apple is BLOCKED on contract despite winning on code** (02). Both of 07's Apple findings were
 corrected by the deeper pass: MusicKit has **no podcast type anywhere** (confirmed), and the
