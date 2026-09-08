@@ -239,6 +239,31 @@ Each ticket must state explicitly which of its findings were carried over and wh
   in the live bundle but the runtime version endpoint needs auth, so "effective" is unconfirmed; and
   full-length playback *may* be reachable post-approval (the `playback` scope is `THIRD_PARTY`-tier) —
   moot given §III, so marked PARTIAL-on-paper rather than certain.
+- [03 — YouTube Music](issues/03-youtube-music-feasibility.md) — **BLOCKED, both by policy and by
+  absence of API. Eliminated, not "blocked for now."** Clause currency re-verified: Developer Policies
+  page dated "Last updated 2026-06-24 UTC", API ToS "2026-04-28 UTC"; the carried-over III.E.1(a),
+  III.I.7, III.I.9 and III.I.14 are all present and unchanged — **nothing loosened**. **New finding:
+  prior work missed the most on-point clause — III.I.1**, which bars creating "a substitute for, or
+  substantially similar service to, any YouTube Applications" and "mimic[king] or replicat[ing]
+  YouTube's core user experiences by recreating features or process flows". YouTube Music's core UX
+  *is* programmed radio mixing music and podcasts, so this is a **second, independent policy kill** not
+  relying on the audio-separation or background arguments. III.I.1 and III.I.9 independently
+  re-verified by the orchestrator. **Listening history is gone**: `watchHistory`/`watchLater` were
+  deprecated 11 Aug 2016 (effective 12 Sep 2016) and removed from the docs 9 Sep 2020;
+  `relatedPlaylists` now exposes only `likes` (YouTube *video* likes, not a Music library), `uploads`,
+  and deprecated `favorites` — **this kills concept step 2 independently of all policy**. **These
+  clauses bar this concept harder than the prior project's**: capture made the caching clauses
+  load-bearing there, whereas this concept needs exactly what III.I.9 (background players) and
+  III.I.7/8 (audio component) name — moving the violation from an occasional feature to the app's
+  **continuous operating mode**. No compliant architecture delivers the product. **IFrame API
+  confirmed dead**: Required Minimum Functionality adds a ≥200×200 visible viewport, no-obscuring
+  overlays, autoplay only when >half visible, and a single-auto-playing-player rule — that last also
+  breaks gapless podcast→song transitions even in a hypothetically compliant version. **YouTube
+  podcasts change nothing** — episodes are ordinary videos in a Studio container; RSS flows *into*
+  YouTube with no episode-audio feed out, so the publisher's own RSS is the better door.
+  **Transferable lesson**: the fastest killer was **background playback**, not audio separation —
+  cheap to check first on any future platform, and the developer's commuting case cannot survive
+  without it.
 
 ## Not yet specified
 
