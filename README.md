@@ -24,6 +24,9 @@ Methodology and document conventions mirror the prior
 
 ## Status
 
+**Verdict reached 2026-09-14: DON'T BUILD.** See [`VERDICT.md`](VERDICT.md) for the reasoning,
+steelmen, MRR arithmetic and the conditions that would reopen the decision.
+
 The platform feasibility sweep is **complete, and every music platform examined is BLOCKED** — each
 by a different clause, drafted by a different legal team:
 
